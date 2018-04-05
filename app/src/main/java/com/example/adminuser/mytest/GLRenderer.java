@@ -58,7 +58,7 @@ public class GLRenderer implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
     private int screenWidth,screenHeight;
 
     public GLRenderer(Context context,String videoPath) {
-        grid=new Grid(200,200);
+        grid=new Grid(100,100);
         vertexData=grid.getVertices();
         textureVertexData=grid.getTexels();
         indiceData=grid.getIndices();
@@ -86,7 +86,14 @@ public class GLRenderer implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
         mediaPlayer=new MediaPlayer();
         try{
             mediaPlayer.setDataSource(context, Uri.fromFile(new File(videoPath)));
-            //mediaPlayer.setDataSource("rtsp://v8.cache1.c.youtube.com/CiILENy73wIaGQnxa4t5p6BVTxMYESARFEgGUgZ2aWRlb3MM/0/0/0/video.3gp");
+            //Uri uri=Uri.parse("rtsp://r2---sn-a5m7zu76.c.youtube.com/Ck0LENy73wIaRAnTmlo5oUgpQhMYESARFEgGUg5yZWNvbW1lbmRhdGlvbnIhAWL2kyn64K6aQtkZVJdTxRoO88HsQjpE1a8d1GxQnGDmDA==/0/0/0/video.3gp");
+            //mediaPlayer.setDataSource("http://www.html5videoplayer.net/videos/toystory.mp4");
+
+            /*
+            https://ccs3.akamaized.net/cchanclips/a6164c61eddb455190330e05c6c91ca6/clip.mp4
+            http://demos.webmproject.org/exoplayer/glass.mp4
+            http://www.html5videoplayer.net/videos/toystory.mp4
+            */
         }catch (IOException e){
             e.printStackTrace();
         }
