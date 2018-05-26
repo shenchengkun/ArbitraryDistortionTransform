@@ -37,6 +37,8 @@ public class GLRenderer implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
     private IntBuffer indiceBuffer;
     private FloatBuffer vertexBuffer;
     private  float[] vertexData;
+    private  float[] vertexDataRight;
+    private FloatBuffer vertexBufferRight;
     private  float[] textureVertexData;
     private FloatBuffer textureVertexBuffer;
 
@@ -50,7 +52,7 @@ public class GLRenderer implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
     private int aTextureCoordHandle;
     private int textureId;
     private SurfaceTexture surfaceTexture;
-    private MediaPlayer mediaPlayer;
+    public MediaPlayer mediaPlayer;
     private float[] mSTMatrix = new float[16];
     private int uSTMMatrixHandle;
     private boolean updateSurface;
@@ -58,8 +60,9 @@ public class GLRenderer implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
     private int screenWidth,screenHeight;
 
     public GLRenderer(Context context,String videoPath) {
-        grid=new Grid(100,100);
+        grid=new Grid(13,13);
         vertexData=grid.getVertices();
+        vertexDataRight=grid.getVerticesRight();
         textureVertexData=grid.getTexels();
         indiceData=grid.getIndices();
         vertexBuffer = ByteBuffer.allocateDirect(vertexData.length * 4)
@@ -67,6 +70,11 @@ public class GLRenderer implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
                 .asFloatBuffer()
                 .put(vertexData);
         vertexBuffer.position(0);
+        vertexBufferRight = ByteBuffer.allocateDirect(vertexDataRight.length * 4)
+                .order(ByteOrder.nativeOrder())
+                .asFloatBuffer()
+                .put(vertexDataRight);
+        vertexBufferRight.position(0);
         textureVertexBuffer = ByteBuffer.allocateDirect(textureVertexData.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
@@ -163,20 +171,24 @@ public class GLRenderer implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
         GLES20.glUniformMatrix4fv(uMatrixHandle,1,false,projectionMatrix,0);
         GLES20.glUniformMatrix4fv(uSTMMatrixHandle, 1, false, mSTMatrix, 0);
 
-        vertexBuffer.position(0);
-        GLES20.glEnableVertexAttribArray(aPositionHandle);
-        GLES20.glVertexAttribPointer(aPositionHandle, 3, GLES20.GL_FLOAT, false, 12, vertexBuffer);
-
         textureVertexBuffer.position(0);
         GLES20.glEnableVertexAttribArray(aTextureCoordHandle);
+        GLES20.glEnableVertexAttribArray(aPositionHandle);
         GLES20.glVertexAttribPointer(aTextureCoordHandle,2,GLES20.GL_FLOAT,false,8,textureVertexBuffer);
-
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,textureId);
 
         GLES20.glUniform1i(uTextureSamplerHandle,0);
         GLES20.glViewport(0,0,screenWidth,screenHeight);
         //GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
+////////////////////////////////////Left///////////////////////////////////////////////
+        vertexBuffer.position(0);
+        GLES20.glVertexAttribPointer(aPositionHandle, 3, GLES20.GL_FLOAT, false, 12, vertexBuffer);
+        GLES20.glDrawElements(GLES20.GL_TRIANGLE_STRIP, grid.getIndicesCount(), GLES20.GL_UNSIGNED_INT, indiceBuffer);
+
+////////////////////////////////////Right///////////////////////////////////////////////
+        vertexBufferRight.position(0);
+        GLES20.glVertexAttribPointer(aPositionHandle, 3, GLES20.GL_FLOAT, false, 12, vertexBufferRight);
         GLES20.glDrawElements(GLES20.GL_TRIANGLE_STRIP, grid.getIndicesCount(), GLES20.GL_UNSIGNED_INT, indiceBuffer);
     }
 
@@ -195,6 +207,5 @@ public class GLRenderer implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
             Matrix.orthoM(projectionMatrix,0,-ratio,ratio,-1f,1f,-1f,1f);
         }else Matrix.orthoM(projectionMatrix,0,-1f,1f,-ratio,ratio,-1f,1f);
     }
-
 
 }

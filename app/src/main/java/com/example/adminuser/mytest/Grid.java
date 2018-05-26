@@ -1,4 +1,8 @@
 package com.example.adminuser.mytest;
+import android.util.Log;
+
+import jxl.Sheet;
+import jxl.Workbook;
 
 /**
  * Created by AdminUser on 3/14/2018.
@@ -10,7 +14,7 @@ package com.example.adminuser.mytest;
 
 public class Grid {
     private int height,width;
-    float[] vertices, texels;
+    float[] vertices, texels,verticesRight;
     int[] indices;
 
     public Grid(int height, int width) {
@@ -19,23 +23,22 @@ public class Grid {
         initVertices();
         initTexels();
         initIndices();
-        transform();
     }
 
-    private void transform() {
+    public int getHeight() {
+        return height;
+    }
 
-        for(int i = 0; i < vertices.length; i += 3) {
-            float x=vertices[i],y=vertices[i + 1];
-            double r= Math.sqrt(x*x+y*y),r1= ((Math.exp(r / 0.76) - 1) / 3.8342);
-            float ratio= (float) (r1/r);
-            vertices[i]     = ratio*x;
-            vertices[i + 1] = ratio*y;
-            vertices[i + 2] = (float) 0.0;
-        }
+    public int getWidth() {
+        return width;
     }
 
     public float[] getVertices() {
         return vertices;
+    }
+
+    public float[] getVerticesRight() {
+        return verticesRight;
     }
 
     public float[] getTexels() {
@@ -49,7 +52,10 @@ public class Grid {
     private void initVertices() {
 
         vertices = new float[height*width*3];
+        verticesRight = new float[height*width*3];
         int i = 0;
+/*
+        //////////////////////////////normal//////////////////////////////
         float h = (float)height-1;
         float w = (float) width - 1;
         for(int row = 0; row < height; row++) {
@@ -62,20 +68,29 @@ public class Grid {
                 vertices[i++] = 0.0f;
             }
         }
-/*
-        double r     = Math.sqrt(0.5*0.5 + 1.75*1.75);
-        double theta = Math.atan2(1.75, -0.5);
-        double r1,theta1;
-        for(int row = 0; row < height; row++) {
-            r1 = r + row * r/ (height - 1) ;   //这个地方，r必须放在除号前面，否则算之前并不会自动转double导致真个结果一直为零~！！！！！！！
-            for (int col = 0; col < width; col++) {
-                theta1=(Math.PI-2*theta)/(width-1)*col+theta;
-                vertices[i++] = (float) (r1*Math.cos(theta1));
-                vertices[i++] = (float) (r1*Math.sin(theta1)-2.75);
-                vertices[i++] = 0.0f;
-            }
+ */
+        //////////////////////////////transform//////////////////////////////
+        //double r     = Math.sqrt(0.5*0.5 + 1.75*1.75);
+        //double theta = Math.atan2(1.75, -0.5);
+        //double r1,theta1;
+        //for(int row = 0; row < height; row++) {
+        //    r1 = r + row * r/ (height - 1) ;   //这个地方，r必须放在除号前面，否则算之前并不会自动转double导致真个结果一直为零~！！！！！！！
+        //    for (int col = 0; col < width; col++) {
+        //        theta1=(Math.PI-2*theta)/(width-1)*col+theta;
+        //        vertices[i] = ((float) (r1*Math.cos(theta1))-1)/2;verticesRight[i]=vertices[i]+1;i++;
+        //        vertices[i] = (float) (r1*Math.sin(theta1)-2.75);verticesRight[i]=vertices[i];i++;
+        //        vertices[i] = 0.0f;verticesRight[i]=vertices[i];i++;
+        //    }
+        //}
+        Sheet sheet = MainActivity.workbook.getSheet(0);
+        for (int j=1;j<=169;j++){
+            Float x=Float.valueOf(sheet.getCell(16,j).getContents()),y=Float.valueOf(sheet.getCell(17,j).getContents());
+            vertices[i] = (x-1)/2;verticesRight[i]=vertices[i]+1;i++;
+            vertices[i] = y;verticesRight[i]=vertices[i];i++;
+            vertices[i] = 0.0f;verticesRight[i]=vertices[i];i++;
+            //Log.i("提取",String.valueOf(y));
+
         }
-*/
     }
 
 
@@ -119,10 +134,15 @@ public class Grid {
                 }
             }
         }
+        if ( (height%2!=0) && height>2) {
+            indices[i++] = (height-1) * width;
+        }
+
 
     }
 
     public int getIndicesCount() {
         return (height * width) + (width - 1) * (height - 2);
     }
+
 }
