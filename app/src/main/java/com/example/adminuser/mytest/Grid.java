@@ -68,20 +68,20 @@ public class Grid {
                 vertices[i++] = 0.0f;
             }
         }
- */
+ *//*
         //////////////////////////////transform//////////////////////////////
-        //double r     = Math.sqrt(0.5*0.5 + 1.75*1.75);
-        //double theta = Math.atan2(1.75, -0.5);
-        //double r1,theta1;
-        //for(int row = 0; row < height; row++) {
-        //    r1 = r + row * r/ (height - 1) ;   //这个地方，r必须放在除号前面，否则算之前并不会自动转double导致真个结果一直为零~！！！！！！！
-        //    for (int col = 0; col < width; col++) {
-        //        theta1=(Math.PI-2*theta)/(width-1)*col+theta;
-        //        vertices[i] = ((float) (r1*Math.cos(theta1))-1)/2;verticesRight[i]=vertices[i]+1;i++;
-        //        vertices[i] = (float) (r1*Math.sin(theta1)-2.75);verticesRight[i]=vertices[i];i++;
-        //        vertices[i] = 0.0f;verticesRight[i]=vertices[i];i++;
-        //    }
-        //}
+        double r     = Math.sqrt(0.5*0.5 + 1.75*1.75);
+        double theta = Math.atan2(1.75, -0.5);
+        double r1,theta1;
+        for(int row = 0; row < height; row++) {
+            r1 = r + row * r/ (height - 1) ;   //这个地方，r必须放在除号前面，否则算之前并不会自动转double导致真个结果一直为零~！！！！！！！
+            for (int col = 0; col < width; col++) {
+                theta1=(Math.PI-2*theta)/(width-1)*col+theta;
+                vertices[i] = ((float) (r1*Math.cos(theta1))-1)/2;verticesRight[i]=vertices[i]+1;i++;
+                vertices[i] = (float) (r1*Math.sin(theta1)-2.75);verticesRight[i]=vertices[i];i++;
+                vertices[i] = 0.0f;verticesRight[i]=vertices[i];i++;
+            }
+        } */
         Sheet sheet = MainActivity.workbook.getSheet(0);
         for (int j=1;j<=169;j++){
             Float x=Float.valueOf(sheet.getCell(16,j).getContents()),y=Float.valueOf(sheet.getCell(17,j).getContents());
@@ -89,7 +89,6 @@ public class Grid {
             vertices[i] = y;verticesRight[i]=vertices[i];i++;
             vertices[i] = 0.0f;verticesRight[i]=vertices[i];i++;
             //Log.i("提取",String.valueOf(y));
-
         }
     }
 

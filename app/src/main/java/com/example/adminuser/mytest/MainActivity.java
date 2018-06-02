@@ -1,11 +1,7 @@
 package com.example.adminuser.mytest;
 
 import android.app.Activity;
-import android.opengl.GLSurfaceView;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 

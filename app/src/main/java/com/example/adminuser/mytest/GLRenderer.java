@@ -170,24 +170,22 @@ public class GLRenderer implements GLSurfaceView.Renderer, SurfaceTexture.OnFram
         GLES20.glUseProgram(programId);
         GLES20.glUniformMatrix4fv(uMatrixHandle,1,false,projectionMatrix,0);
         GLES20.glUniformMatrix4fv(uSTMMatrixHandle, 1, false, mSTMatrix, 0);
-
-        textureVertexBuffer.position(0);
-        GLES20.glEnableVertexAttribArray(aTextureCoordHandle);
+        GLES20.glUniform1i(uTextureSamplerHandle,0);
+        GLES20.glViewport(0,0,screenWidth,screenHeight);
         GLES20.glEnableVertexAttribArray(aPositionHandle);
-        GLES20.glVertexAttribPointer(aTextureCoordHandle,2,GLES20.GL_FLOAT,false,8,textureVertexBuffer);
+        GLES20.glEnableVertexAttribArray(aTextureCoordHandle);
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,textureId);
 
-        GLES20.glUniform1i(uTextureSamplerHandle,0);
-        GLES20.glViewport(0,0,screenWidth,screenHeight);
-        //GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
+        //textureVertexBuffer.position(0);
+        GLES20.glVertexAttribPointer(aTextureCoordHandle,2,GLES20.GL_FLOAT,false,8,textureVertexBuffer);
 ////////////////////////////////////Left///////////////////////////////////////////////
-        vertexBuffer.position(0);
+        //vertexBuffer.position(0);
         GLES20.glVertexAttribPointer(aPositionHandle, 3, GLES20.GL_FLOAT, false, 12, vertexBuffer);
         GLES20.glDrawElements(GLES20.GL_TRIANGLE_STRIP, grid.getIndicesCount(), GLES20.GL_UNSIGNED_INT, indiceBuffer);
 
 ////////////////////////////////////Right///////////////////////////////////////////////
-        vertexBufferRight.position(0);
+        //vertexBufferRight.position(0);
         GLES20.glVertexAttribPointer(aPositionHandle, 3, GLES20.GL_FLOAT, false, 12, vertexBufferRight);
         GLES20.glDrawElements(GLES20.GL_TRIANGLE_STRIP, grid.getIndicesCount(), GLES20.GL_UNSIGNED_INT, indiceBuffer);
     }
